@@ -40,6 +40,7 @@ addGroupCoverages <- function(
   maxReplicates = 5,
   sampleRatio = 0.8,
   kmerLength = 6,
+  maxFragmentLength=Inf,
   threads = getArchRThreads(),
   returnGroups = FALSE,
   parallelParam = NULL,
@@ -59,6 +60,7 @@ addGroupCoverages <- function(
   .validInput(input = maxReplicates, name = "maxReplicates", valid = c("integer"))
   .validInput(input = sampleRatio, name = "sampleRatio", valid = c("numeric"))
   .validInput(input = kmerLength, name = "kmerLength", valid = c("integer"))
+  .validInput(input = maxFragmentLength, name = "maxFragmentLength", valid = c("integer", "infinite"))
   .validInput(input = threads, name = "threads", valid = c("integer"))
   .validInput(input = returnGroups, name = "returnGroups", valid = c("boolean"))
   .validInput(input = parallelParam, name = "parallelParam", valid = c("parallelparam","null"))
@@ -202,6 +204,7 @@ addGroupCoverages <- function(
   args$cellGroups <- unlistGroups
   args$genome <- getGenome(ArchRProj)
   args$kmerLength <- kmerLength
+  args$maxFragmentLength <- maxFragmentLength
   args$ArrowFiles <- getArrowFiles(ArchRProj)
   args$availableChr <- .availableSeqnames(getArrowFiles(ArchRProj))
   args$chromLengths <- getChromLengths(ArchRProj)
@@ -275,6 +278,7 @@ addGroupCoverages <- function(
   cellGroups,
   kmerBias = NULL, 
   kmerLength = 6, 
+  maxFragmentLength=Inf,
   genome = NULL,
   ArrowFiles = NULL, 
   cellsInArrow = NULL, 
@@ -361,11 +365,11 @@ addGroupCoverages <- function(
       
         if(it == 1){
       
-          fragik <- .getFragsFromArrow(ArrowFiles[j], chr = availableChr[k], out = "GRanges", cellNames = cellGroupi)
+          fragik <- .getFragsFromArrow(ArrowFiles[j], chr = availableChr[k], out = "GRanges", cellNames = cellGroupi, maxFragmentLength = maxFragmentLength)
       
         }else{
       
-          fragik <- c(fragik, .getFragsFromArrow(ArrowFiles[j], chr = availableChr[k], out = "GRanges", cellNames = cellGroupi))
+          fragik <- c(fragik, .getFragsFromArrow(ArrowFiles[j], chr = availableChr[k], out = "GRanges", cellNames = cellGroupi, maxFragmentLength=maxFragmentLength))
       
         }
       
